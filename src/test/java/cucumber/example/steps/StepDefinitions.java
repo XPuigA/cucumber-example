@@ -1,7 +1,11 @@
 package cucumber.example.steps;
 
+import java.util.List;
+import java.util.Map;
+
 import cucumber.api.java8.En;
 import cucumber.example.ArithmeticOps;
+import io.cucumber.datatable.DataTable;
 import junit.framework.Assert;
 
 public class StepDefinitions implements En {
@@ -46,9 +50,18 @@ public class StepDefinitions implements En {
 			result = ops.divide(result, int1);
 		});
 		
+		When("I divide the following numbers", (DataTable dataTable) -> {
+			List<Integer> list = dataTable.asList(Integer.class);
+			result = ops.divide(list.get(0), list.get(1));
+		});
+		
+		When("I multiply the following numbers represented as String", (DataTable dataTable) -> {
+			List<Map<String, String>> list = dataTable.asMaps(String.class, String.class);
+			result = ops.multiply(Integer.parseInt(list.get(0).get("Number1")), Integer.parseInt(list.get(0).get("Number2")));
+		});
+		
 		Then("the result is {int}", (Integer expected) -> {
 		    Assert.assertEquals(expected, result);
-		});
-			
+		});	
 	}
 }
